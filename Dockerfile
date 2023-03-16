@@ -94,7 +94,26 @@ RUN rm -rf /icinga2-bin/usr/share/doc/icinga2/markdown
 
 FROM debian:bullseye-slim as icinga2
 
-RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y ca-certificates curl dumb-init libboost-{context,coroutine,date-time,filesystem,iostreams,program-options,regex,system,thread}1.74.0 libcap2-bin libedit2 libldap-common libmariadb3 libmoosex-role-timer-perl libpq5 libssl1.1 mailutils monitoring-plugins msmtp{,-mta} openssh-client openssl; apt-get clean; rm -vrf /var/lib/apt/lists/*"]
+# TK original packets
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y ca-certificates curl dumb-init libboost-{context,coroutine,date-time,filesystem,iostreams,program-options,regex,system,thread}1.74 libcap2-bin libedit2 libldap-common libmariadb3 libmoosex-role-timer-perl libpq5 libssl1.1 mailutils monitoring-plugins msmtp{,-mta} openssh-client openssl"]
+# TK apt-utils
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y apt-utils"]
+# TK added perl, python, python3, pip3, bc, wget, apt-utils
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y libnet-snmp-perl libcrypt-des-perl libcrypt-rijndael-perl libdigest-hmac-perl python python3 python3-pip bc wget"]
+# TK added linuxfabric repo
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "wget https://repo.linuxfabrik.ch/linuxfabrik.key -O /etc/apt/trusted.gpg.d/linuxfabrik.asc; source /etc/os-release; echo 'deb [signed-by=/etc/apt/trusted.gpg.d/linuxfabrik.asc] https://repo.linuxfabrik.ch/monitoring-plugins/debian/ bullseye-release main' > /etc/apt/sources.list.d/linuxfabrik-monitoring-plugins.list"]
+# TK added linuxfabric monitoring-plugins
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y linuxfabrik-monitoring-plugins"]
+# TK added icingacli
+#RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y icingacli"]
+# TK added non-free sources
+#RUN ["/bin/bash", "-exo", "pipefail", "-c", "sed -i -e's/ main/ main contrib non-free/g' /etc/apt/sources.list"]
+# TK added netbase, snmp, snmpd, snmp-mibs-downloader
+#RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y netbase snmp snmpd snmp-mibs-downloader"]
+# TK clean and remove apt-lists
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get clean; rm -vrf /var/lib/apt/lists/*"]
+# TK added python module pysnmp
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "pip3 install -U pysnmp"]
 
 COPY --from=entrypoint /entrypoint/entrypoint /entrypoint
 
