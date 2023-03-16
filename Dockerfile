@@ -96,12 +96,12 @@ FROM debian:bullseye-slim as icinga2
 
 # TK original packets
 RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y ca-certificates curl dumb-init libboost-{context,coroutine,date-time,filesystem,iostreams,program-options,regex,system,thread}1.74 libcap2-bin libedit2 libldap-common libmariadb3 libmoosex-role-timer-perl libpq5 libssl1.1 mailutils monitoring-plugins msmtp{,-mta} openssh-client openssl"]
-# TK added perl, python, python3, pip3, bc, wget, apt-utils
+# TK added perl, python, python3, pip3, bc, wget
 RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y libnet-snmp-perl libcrypt-des-perl libcrypt-rijndael-perl libdigest-hmac-perl python python3 python3-pip bc wget"]
 # TK added linuxfabric repo
-#RUN ["/bin/bash", "-exo", "pipefail", "-c", "wget https://repo.linuxfabrik.ch/linuxfabrik.key -O /etc/apt/trusted.gpg.d/linuxfabrik.asc; source /etc/os-release; echo 'deb [signed-by=/etc/apt/trusted.gpg.d/linuxfabrik.asc] https://repo.linuxfabrik.ch/monitoring-plugins/debian/ bullseye-release main' > /etc/apt/sources.list.d/linuxfabrik-monitoring-plugins.list"]
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "wget https://repo.linuxfabrik.ch/linuxfabrik.key -O /etc/apt/trusted.gpg.d/linuxfabrik.asc; source /etc/os-release; echo 'deb [signed-by=/etc/apt/trusted.gpg.d/linuxfabrik.asc] https://repo.linuxfabrik.ch/monitoring-plugins/debian/ bullseye-release main' > /etc/apt/sources.list.d/linuxfabrik-monitoring-plugins.list"]
 # TK added linuxfabric monitoring-plugins
-#RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y linuxfabrik-monitoring-plugins"]
+RUN ["/bin/bash", "-exo", "pipefail", "-c", "apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y linuxfabrik-monitoring-plugins"]
 # TK added icingacli
 #RUN ["/bin/bash", "-exo", "pipefail", "-c", "DEBIAN_FRONTEND=noninteractive apt-get install --no-install-{recommends,suggests} -y icingacli"]
 # TK added non-free sources
